@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexmitcul <alexmitcul@student.42.fr>      +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 20:13:23 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/06 21:45:23 by alexmitcul       ###   ########.fr       */
+/*   Updated: 2022/11/07 01:49:41 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

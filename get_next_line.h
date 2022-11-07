@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexmitcul <alexmitcul@student.42.fr>      +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 20:13:26 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/06 21:44:32 by alexmitcul       ###   ########.fr       */
+/*   Updated: 2022/11/07 01:48:44 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
