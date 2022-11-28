@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 09:24:33 by amitcul           #+#    #+#             */
-/*   Updated: 2022/11/28 09:43:33 by amitcul          ###   ########.fr       */
+/*   Created: 2022/11/28 09:27:02 by amitcul           #+#    #+#             */
+/*   Updated: 2022/11/28 10:16:16 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*clear(char *amount, char *bf)
 {
@@ -43,6 +43,7 @@ char	*remove_extra(char *amount)
 	free(amount);
 	return (line);
 }
+
 
 static char	*get_line(char *amount)
 {
@@ -95,34 +96,25 @@ char	*read_and_join(int fd, char *amount)
 
 char	*get_next_line(int fd)
 {
-	static char	*amount = NULL;
-	char		*line;
+	static t_fd_item	*fd_list = NULL;
+	t_fd_item			*curr_file;
+	char	*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	amount = read_and_join(fd, amount);
-	if (amount == NULL)
+	curr_file = get_file_by_fd(fd_list, fd);
+	if (curr_file == NULL)
+		add_front(&fd_list, fd);
+	curr_file = get_file_by_fd(fd_list, fd);
+	curr_file->amount = read_and_join(curr_file->fd, curr_file->amount);
+	if (curr_file->amount == NULL)
+	{
+		free_item(&fd_list, curr_file);
 		return (NULL);
-	line = get_line(amount);
-	amount = remove_extra(amount);
+	}
+	line = get_line(curr_file->amount);
+	curr_file->amount = remove_extra(curr_file->amount);
+	if (curr_file->amount == NULL)
+		free_item(&fd_list, curr_file);
 	return (line);
 }
-/*
-#include <fcntl.h>
-#include <stdio.h>
-int main(void)
-{
-	int fd;
-	char	*line;
-
-	fd = open("empty", O_RDONLY);
-
-	while ((line = get_next_line(fd)))
-	{
-		printf("%s", line);
-		free(line);
-	}
-
-	return (0);
-}
-*/

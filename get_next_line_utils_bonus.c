@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 01:45:39 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/07 05:50:00 by amitcul          ###   ########.fr       */
+/*   Updated: 2022/11/26 13:59:25 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ void	free_item(t_fd_item **lst, t_fd_item *item)
 
 t_fd_item	*get_file_by_fd(t_fd_item *lst, int fd)
 {
+	if (lst == NULL)
+		return (NULL);
 	while (lst)
 	{
 		if (lst->fd == fd)

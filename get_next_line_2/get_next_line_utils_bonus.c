@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/28 09:24:46 by amitcul           #+#    #+#             */
-/*   Updated: 2022/11/28 09:24:55 by amitcul          ###   ########.fr       */
+/*   Created: 2022/11/28 09:27:14 by amitcul           #+#    #+#             */
+/*   Updated: 2022/11/28 10:17:50 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+
+t_fd_item	*get_file_by_fd(t_fd_item *lst, int fd)
+{
+	while (lst)
+	{
+		if (lst->fd == fd)
+			return (lst);
+		lst = lst->next;
+	}
+	return (NULL);
+}
 
 int	ft_strlen(char *str)
 {
@@ -42,29 +53,50 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-void	ft_bzero(void *s, size_t n)
-{
-	char	*str;
-	size_t	i;
-
-	str = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		str[i] = '\0';
-		i++;
-	}
-}
-
 void	*ft_calloc(size_t elementCount, size_t elementSize)
 {
 	char	*res;
+	char	*str;
+	size_t	i;
 
 	res = malloc(elementSize * elementCount);
 	if (!res)
 		return (NULL);
-	ft_bzero(res, elementSize * elementCount);
+	str = (char *)res;
+	i = 0;
+	while (i < elementCount * elementSize)
+	{
+		str[i] = '\0';
+		i++;
+	}
 	return (res);
+}
+
+void	free_item(t_fd_item **lst, t_fd_item *item)
+{
+	t_fd_item	*tmp;
+	t_fd_item	*del;
+
+	if (lst == NULL || *lst == NULL || item == NULL)
+		return ;
+	tmp = *lst;
+	if (tmp->fd == item->fd)
+	{
+		*lst = (*lst)->next;
+		tmp->next = NULL;
+		free(tmp->amount);
+		free(tmp);
+	}
+	else
+	{
+		while (tmp->next->fd != item->fd)
+			tmp = tmp->next;
+		del = tmp->next;
+		tmp->next = tmp->next->next;
+		del->next = NULL;
+		free(del->amount);
+		free(del);
+	}
 }
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -90,4 +122,23 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	res[i] = '\0';
 	return (res);
+}
+
+void	add_front(t_fd_item **lst, int fd)
+{
+	t_fd_item	*new_item;
+
+	new_item = malloc(sizeof(t_fd_item));
+	if (!new_item)
+		return ;
+	new_item->amount = NULL;
+	new_item->fd = fd;
+	new_item->next = NULL;
+	if (*lst == NULL)
+		*lst = new_item;
+	else
+	{
+		new_item->next = *lst;
+		*lst = new_item;
+	}
 }

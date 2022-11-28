@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/07 01:45:37 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/07 05:49:31 by amitcul          ###   ########.fr       */
+/*   Updated: 2022/11/26 15:31:42 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,12 @@ static int	find_first_newline(char *str, char c)
 static int	read_and_join(int fd, t_fd_item **curr_file)
 {
 	int		bytes_readen;
-	char	bf[BUFFER_SIZE + 1];
+	char	*bf;
 	char	*tmp;
 	int		i;
 
 	i = 0;
+	bf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	while (i < BUFFER_SIZE + 1)
 	{
 		bf[i] = 0;
@@ -41,8 +42,12 @@ static int	read_and_join(int fd, t_fd_item **curr_file)
 	}
 	bytes_readen = read(fd, bf, BUFFER_SIZE);
 	if (bytes_readen <= 0)
+	{
+		free(bf);
 		return (bytes_readen);
+	}
 	tmp = ft_strjoin((*curr_file)->amount, bf);
+	free(bf);
 	free((*curr_file)->amount);
 	(*curr_file)->amount = tmp;
 	return (bytes_readen);
@@ -111,7 +116,7 @@ char	*get_next_line(int fd)
 		;
 	if (ft_strlen(curr_file->amount) == 0)
 	{
-		free(curr_file);
+		free_item(&fd_list, curr_file);
 		return (NULL);
 	}
 	extract_result(curr_file, &result);

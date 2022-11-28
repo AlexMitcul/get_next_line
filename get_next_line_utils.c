@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 20:13:23 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/07 01:49:41 by amitcul          ###   ########.fr       */
+/*   Updated: 2022/11/27 18:14:57 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,13 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int character)
 {
-	if (s == NULL)
+	char	c;
+
+	if (!s)
 		return (NULL);
+	c = character;
 	while (*s)
 	{
 		if (*s == c)
