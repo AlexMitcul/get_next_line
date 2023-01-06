@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/22 20:13:26 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/27 18:11:53 by amitcul          ###   ########.fr       */
+/*   Created: 2022/11/28 09:26:40 by amitcul           #+#    #+#             */
+/*   Updated: 2022/11/28 09:26:42 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,15 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100000
-# endif
-
 char	*get_next_line(int fd);
 
-/**
- * get_next_line_utils.c
-*/
-
-char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen(char *str);
-char	*ft_strchr(char *s, int c)
-void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t elementCount, size_t elementSize);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strjoin(char *s1, char *s2);
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
 #endif

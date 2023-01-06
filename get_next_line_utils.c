@@ -3,32 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/22 20:13:23 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/27 18:14:57 by amitcul          ###   ########.fr       */
+/*   Created: 2022/11/28 09:24:46 by amitcul           #+#    #+#             */
+/*   Updated: 2022/11/28 09:24:55 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	ft_bzero(void *s, size_t n)
+int	ft_strlen(char *str)
 {
-	while (n > 0)
+	int	size;
+
+	if (!str)
+		return (0);
+	size = 0;
+	while (*str)
 	{
-		*(char *)s = 0;
-		s += 1;
-		n -= 1;
+		str++;
+		size++;
 	}
+	return (size);
 }
 
-char	*ft_strchr(const char *s, int character)
+char	*ft_strchr(const char *s, int c)
 {
-	char	c;
-
-	if (!s)
+	if (s == NULL)
 		return (NULL);
-	c = character;
 	while (*s)
 	{
 		if (*s == c)
@@ -40,30 +42,43 @@ char	*ft_strchr(const char *s, int character)
 	return (NULL);
 }
 
-int	ft_strlen(char *str)
+void	ft_bzero(void *s, size_t n)
 {
-	int	size;
+	char	*str;
+	size_t	i;
 
-	size = 0;
-	if (str == NULL)
-		return (0);
-	while (str[size])
-		size++;
-	return (size);
+	str = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		str[i] = '\0';
+		i++;
+	}
+}
+
+void	*ft_calloc(size_t elementCount, size_t elementSize)
+{
+	char	*res;
+
+	res = malloc(elementSize * elementCount);
+	if (!res)
+		return (NULL);
+	ft_bzero(res, elementSize * elementCount);
+	return (res);
 }
 
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
 	int		length;
-	size_t	i;
+	int		i;
 
 	length = ft_strlen(s1) + ft_strlen(s2);
 	res = (char *)malloc(sizeof(char) * (length + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
-	while (s1 && *s1)
+	while (s1 != NULL && *s1 != '\0')
 	{
 		res[i++] = *s1;
 		s1 += 1;

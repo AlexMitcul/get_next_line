@@ -3,125 +3,121 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amitcul <amitcul@student.42.fr>            +#+  +:+       +#+        */
+/*   By: amitcul <amitcul@student.42porto.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/07 01:45:37 by alexmitcul        #+#    #+#             */
-/*   Updated: 2022/11/26 15:31:42 by amitcul          ###   ########.fr       */
+/*   Created: 2022/11/28 10:31:02 by amitcul           #+#    #+#             */
+/*   Updated: 2022/11/28 10:49:22 by amitcul          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static int	find_first_newline(char *str, char c)
+char	*clear(char *amount, char *bf)
 {
-	int	i;
-
-	i = 0;
-	while (str && str[i])
-	{
-		if (str[i] == c)
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-static int	read_and_join(int fd, t_fd_item **curr_file)
-{
-	int		bytes_readen;
-	char	*bf;
 	char	*tmp;
-	int		i;
 
-	i = 0;
-	bf = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	while (i < BUFFER_SIZE + 1)
-	{
-		bf[i] = 0;
-		i++;
-	}
-	bytes_readen = read(fd, bf, BUFFER_SIZE);
-	if (bytes_readen <= 0)
-	{
-		free(bf);
-		return (bytes_readen);
-	}
-	tmp = ft_strjoin((*curr_file)->amount, bf);
-	free(bf);
-	free((*curr_file)->amount);
-	(*curr_file)->amount = tmp;
-	return (bytes_readen);
+	tmp = ft_strjoin(amount, bf);
+	free(amount);
+	return (tmp);
 }
 
-static void	extract_result(t_fd_item *curr_file, char **result)
+char	*remove_extra(char *amount)
 {
-	int	index;
-	int	i;
-
-	index = find_first_newline(curr_file->amount, '\n');
-	if (index == -1)
-		index = ft_strlen(curr_file->amount);
-	*result = malloc(sizeof(char) * (index + 2));
-	if (*result == NULL)
-		return ;
-	i = 0;
-	while (i <= index)
-	{
-		(*result)[i] = curr_file->amount[i];
-		i++;
-	}
-	(*result)[i] = '\0';
-}
-
-static void	remove_extracted_symbols(t_fd_item **item)
-{
-	int		index;
 	int		i;
 	int		j;
-	int		amount_length;
-	char	*new_amount;
+	char	*line;
 
-	index = find_first_newline((*item)->amount, '\n');
-	if (index == -1)
-		index = ft_strlen((*item)->amount);
-	amount_length = ft_strlen((*item)->amount);
-	new_amount = malloc(sizeof(char) * (amount_length - index + 1));
 	i = 0;
-	j = index + 1;
-	while (j < amount_length)
-	{
-		new_amount[i] = (*item)->amount[j];
+	while (amount[i] && amount[i] != '\n')
 		i++;
-		j++;
+	if (!amount[i])
+	{
+		free(amount);
+		return (NULL);
 	}
-	new_amount[i] = '\0';
-	free((*item)->amount);
-	(*item)->amount = new_amount;
+	line = ft_calloc((ft_strlen(amount) - i + 1), sizeof(char));
+	i++;
+	j = 0;
+	while (amount[i])
+		line[j++] = amount[i++];
+	free(amount);
+	return (line);
+}
+
+static char	*get_line(char *amount)
+{
+	char	*line;
+	int		i;
+
+	i = 0;
+	if (!amount[i])
+		return (NULL);
+	while (amount[i] && amount[i] != '\n')
+		i++;
+	line = ft_calloc(i + 2, sizeof(char));
+	i = 0;
+	while (amount[i] && amount[i] != '\n')
+	{
+		line[i] = amount[i];
+		i++;
+	}
+	if (amount[i] && amount[i] == '\n')
+		line[i++] = '\n';
+	return (line);
+}
+
+char	*read_and_join(int fd, char *amount)
+{
+	char	*bf;
+	int		readen;
+
+	if (!amount)
+		amount = ft_calloc(1, sizeof(char));
+	bf = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	readen = BUFFER_SIZE;
+	while (readen > 0)
+	{
+		readen = read(fd, bf, BUFFER_SIZE);
+		if (readen == -1)
+		{
+			free(bf);
+			free(amount);
+			return (NULL);
+		}
+		bf[readen] = '\0';
+		amount = clear(amount, bf);
+		if (ft_strchr(bf, '\n'))
+			break ;
+	}
+	free(bf);
+	return (amount);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_fd_item	*fd_list = NULL;
-	t_fd_item			*curr_file;
-	char				*result;
+	static char	*files[1024];
+	char		*line;
 
-	if (read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	curr_file = get_file_by_fd(fd_list, fd);
-	if (curr_file == NULL)
-		ft_lstadd_front(&fd_list, fd);
-	curr_file = get_file_by_fd(fd_list, fd);
-	while (find_first_newline(curr_file->amount, '\n') == -1
-		&& read_and_join(fd, &curr_file) > 0)
-		;
-	if (ft_strlen(curr_file->amount) == 0)
-	{
-		free_item(&fd_list, curr_file);
+	files[fd] = read_and_join(fd, files[fd]);
+	if (files[fd] == NULL)
 		return (NULL);
-	}
-	extract_result(curr_file, &result);
-	remove_extracted_symbols(&curr_file);
-	if (curr_file->amount && curr_file->amount[0] == 0)
-		free_item(&fd_list, curr_file);
-	return (result);
+	line = get_line(files[fd]);
+	files[fd] = remove_extra(files[fd]);
+	if (files[fd] == NULL)
+		free(files[fd]);
+	return (line);
 }
+
+/* int main(void)
+{
+	int fd = open("42_with_nl", O_RDONLY);
+	char *line;
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s", line);
+		free(line);
+	}
+	return (0);
+} */
